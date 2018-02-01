@@ -8,6 +8,7 @@ import {
   BackHandler
 } from 'react-native';
 import { Router, Scene, ActionConst, Actions } from 'react-native-router-flux';
+import * as firebase from "firebase";
 
 // import screens/components
 import OnboardingScreen from './src/screens/OnboardingScreen';
@@ -17,10 +18,22 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import ParentSignupScreen from './src/screens/ParentSignupScreen';
 
+// Lol this is so wrong...
+var config = {
+  apiKey: "AIzaSyCd6I6ww2ESuZ8WiihEmHk7UmQyoktbszc",
+  authDomain: "fir-demo-9573c.firebaseapp.com",
+  databaseURL: "https://fir-demo-9573c.firebaseio.com",
+  projectId: "fir-demo-9573c",
+  // storageBucket: "fir-demo-9573c.appspot.com",
+  messagingSenderId: "338860958727"
+}
+
 export default class App extends Component{
   componentWillMount() {
     BackHandler.addEventListener('hardwareBackPress', () => Actions.pop());
     StatusBar.setBarStyle('light-content', true);
+
+    firebase.initializeApp(config);
   }
 
   render() {
@@ -34,7 +47,7 @@ export default class App extends Component{
             key="onboarding"
             component={OnboardingScreen}
             hideNavBar={true}
-            initial
+            
           />
           <Scene
             key="home"
@@ -55,6 +68,7 @@ export default class App extends Component{
             key="login"
             component={LoginScreen}
             hideNavBar={true}
+            initial
           />
           <Scene
             key="settings"
@@ -65,7 +79,9 @@ export default class App extends Component{
           />
           <Scene
             key="parent_signup"
-            hideNavBar={true}
+            title="Create Account"
+            onLeft={() => Actions.login()}
+            leftButtonImage={require('./src/assets/back_arrow.png')}
             component={ParentSignupScreen}
           />
         </Scene>
