@@ -14,6 +14,8 @@ import OnboardingScreen from './src/screens/OnboardingScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import LessonDetailScreen from './src/screens/LessonDetailScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import ParentSignupScreen from './src/screens/ParentSignupScreen';
 
 export default class App extends Component{
   componentWillMount() {
@@ -50,11 +52,21 @@ export default class App extends Component{
             rightButtonImage={require('./src/assets/settings.png')}
           />
           <Scene
+            key="login"
+            component={LoginScreen}
+            hideNavBar={true}
+          />
+          <Scene
             key="settings"
             component={SettingsScreen}
             title="Settings"
             onRight={() => Actions.settings()}
             rightButtonImage={require('./src/assets/settings.png')}
+          />
+          <Scene
+            key="parent_signup"
+            hideNavBar={true}
+            component={ParentSignupScreen}
           />
         </Scene>
       </Router>

@@ -10,6 +10,7 @@ import {
     TouchableWithoutFeedback
 } from 'react-native';
 import { Card } from './../components/common/Card';
+import { Actions } from 'react-native-router-flux';
 
 class HomeScreen extends Component {
 
@@ -19,17 +20,39 @@ class HomeScreen extends Component {
         visible: false
     }
 
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            Alert.alert(
+              'Exit App',
+              'You are about to exit the application, are you sure?',
+              [
+                {text: 'OK', onPress: () => BackHandler.exitApp()},
+              ]
+            );
+          });
+    }
+
     componentDidMount() {
-        AsyncStorage.getItem('userData').then(value => {
+        AsyncStorage.getItem('njakaUserData').then(value => {
             if(JSON.parse(value) == null) {
                 var data = {
                     loggedIn: false
                 }
-                AsyncStorage.setItem('userData', JSON.stringify(data))
+                AsyncStorage.setItem('njakaUserData', JSON.stringify(data));
+                this.setState({ loggedIn: true });
             } else {
                 this.setState({ loggedIn: true });
             }
         })
+    }
+
+    navigateToDetails() {
+        // if(this.state.loggedIn) {
+        //     Actions.lesson();
+        // } else {
+        //     Actions.login();
+        // }
+        Actions.login();
     }
 
     render() {
@@ -53,14 +76,14 @@ class HomeScreen extends Component {
                 <View style={styles.lessonContainer}>
                     <View style={styles.rowStyle}>
                         <Card>
-                            <TouchableWithoutFeedback onPress={() => console.warn('test')}>
+                            <TouchableWithoutFeedback onPress={() => this.navigateToDetails()}>
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
                                         source={require('./../assets/algo_pic.jpeg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
-                                        <Text style={styles.lessonTextStyle}>Algorithms</Text>
+                                        <Text numberOfLines={1} style={styles.lessonTextStyle}>Intro to Algorithms</Text>
                                         <Text style={styles.descriptionStyle}>Introduction to algorithms. 
         Basic stuff to learn</Text>
                                     </View>
@@ -68,14 +91,14 @@ class HomeScreen extends Component {
                             </TouchableWithoutFeedback>
                         </Card>
                         <Card>
-                            <TouchableWithoutFeedback onPress={() => console.warn('test')}>
+                            <TouchableWithoutFeedback onPress={() => this.navigateToDetails()}>
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
                                         source={require('./../assets/algo_pic.jpeg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
-                                        <Text style={styles.lessonTextStyle}>Algorithms</Text>
+                                        <Text numberOfLines={1} style={styles.lessonTextStyle}>Basic Algorithms</Text>
                                         <Text style={styles.descriptionStyle}>Introduction to algorithms. 
         Basic stuff to learn</Text>
                                     </View>
@@ -86,14 +109,14 @@ class HomeScreen extends Component {
 
                     <View style={styles.rowStyle}>
                         <Card>
-                            <TouchableWithoutFeedback onPress={() => console.warn('test')}>
+                            <TouchableWithoutFeedback onPress={() => this.navigateToDetails()}>
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
                                         source={require('./../assets/algo_pic.jpeg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
-                                        <Text style={styles.lessonTextStyle}>Algorithms</Text>
+                                        <Text numberOfLines={1} style={styles.lessonTextStyle}>Game Algorithms</Text>
                                         <Text style={styles.descriptionStyle}>Introduction to algorithms. 
         Basic stuff to learn</Text>
                                     </View>
@@ -101,14 +124,14 @@ class HomeScreen extends Component {
                             </TouchableWithoutFeedback>
                         </Card>
                         <Card>
-                            <TouchableWithoutFeedback onPress={() => console.warn('test')}>
+                            <TouchableWithoutFeedback onPress={() => this.navigateToDetails()}>
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
                                         source={require('./../assets/algo_pic.jpeg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
-                                        <Text style={styles.lessonTextStyle}>Algorithms</Text>
+                                        <Text numberOfLines={1} style={styles.lessonTextStyle}>Graph Algorithms</Text>
                                         <Text style={styles.descriptionStyle}>Introduction to algorithms. 
         Basic stuff to learn</Text>
                                     </View>
@@ -140,7 +163,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         fontWeight: '200',
         color: '#252525',
-        fontSize: 20
+        fontSize: 15
     },
     descriptionStyle: {
         fontSize: 12,

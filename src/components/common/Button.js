@@ -21,11 +21,14 @@ class Button extends Component {
 // define your styles
 const styles = StyleSheet.create({
     button: {
-        borderRadius: 50,
-        backgroundColor: '#0066FF',
+        borderRadius: 5,
+        height: 50,
+        borderWidth: 2,
+        borderColor: '#fff',
+        backgroundColor: '#555555',
         paddingHorizontal: 50,
         paddingVertical: 10,
-        margin: 20,
+        margin: 25,
         justifyContent: 'center',
         alignItems: 'center'
     },
