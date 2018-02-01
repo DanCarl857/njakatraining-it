@@ -1,12 +1,24 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { 
+    View, 
+    Text, 
+    StyleSheet, 
+    Image, 
+    ScrollView,
+    TouchableOpacity, 
+    TouchableWithoutFeedback, 
+    AsyncStorage,
+    BackHandler
+} from 'react-native';
 
 // import custom libraries and components
 import { TextField } from 'react-native-material-textfield';
 import Button from '../components/common/Button';
 // import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { Actions } from 'react-native-router-flux';
+import * as firebase from "firebase";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // create a component
 class ParentSignupScreen extends Component {
@@ -15,29 +27,72 @@ class ParentSignupScreen extends Component {
         name: '',
         username: '',
         email: '',
-        password: ''
+        password: '',
+        error: false,
+        firebaseErr: false,
+        visible: false
+    }
+
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => Actions.pop());
+    }
+
+    componentDidMount() {
+        AsyncStorage.getItem('njakaParentData').then(value => {
+            if(JSON.parse(value) == null) {
+                var data = {
+                    loggedIn: false,
+                    name: '',
+                    username: '',
+                    phone: '',
+                    email: '', 
+                    password: ''
+                }
+                AsyncStorage.setItem('njakaParentData', JSON.stringify(data));
+            }
+        });
+    }
+
+    signup() {
+        this.setState({ visible: !this.state.visible });
+        const { email, password, username, phone, name } = this.state;
+
+        if(name == '' || email == '' || password == '' || username == '' || phone == '') {
+            this.setState({ error: true });
+            return;
+        }
+
+        firebase.auth().createUserWithEmailAndPassword(email, password).then(data => {
+            this.setState({ visible: false });
+            // Set local creds and navigate to home...
+            AsyncStorage.getItem('njakaParentData').then(value => {
+                if(JSON.parse(value) != null) {
+                    var data = {
+                        name: name,
+                        email: email,
+                        password: password, 
+                        username: username,
+                        phone: phone,
+                        loggedIn: true
+                    }
+                    AsyncStorage.setItem('njakaParentData', JSON.stringify(data));
+                    
+                    // Navigate to home...
+                    Actions.home();
+                }
+            });
+        }).catch(err => {
+            this.setState({ visible: false });
+            // Handle errors here...
+            this.setState({ firebaseErr: true, name: '', email: '', password: '', username: '', phone: '' });
+        })
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.iconStyleContainer}>
-                    <TouchableWithoutFeedback onPress={() => Actions.login()}>
-                        <View>
-                            <Image
-                                style={styles.backButtonStyle}
-                                source={require('./../assets/back_arrow.png')}
-                            />
-                        </View>
-                    </TouchableWithoutFeedback>
-                </View>
+                <ScrollView>
                 <View style={styles.SignupContainer}>
-                    <View style={styles.imageContainer}>
-                        <Image
-                            style={styles.imageStyle}
-                            source={require('./../assets/main_logo.png')}
-                        />
-                    </View>
                     <TextField
                         textColor='#fff'
                         tintColor='#fff'
@@ -75,6 +130,17 @@ class ParentSignupScreen extends Component {
                         textColor='#fff'
                         tintColor='#fff'
                         baseColor='#DEDEDE'
+                        autoCorrect={false}
+                        enablesReturnKeyAutomatically={true}
+                        returnKeyType='next'
+                        label='Phone'
+                        value={this.state.phone}
+                        onChangeText={(phone) => this.setState({ phone })}
+                    />
+                    <TextField
+                        textColor='#fff'
+                        tintColor='#fff'
+                        baseColor='#DEDEDE'
                         secureTextEntry
                         autoCorrect={false}
                         enablesReturnKeyAutomatically={true}
@@ -83,19 +149,31 @@ class ParentSignupScreen extends Component {
                         value={this.state.password}
                         onChangeText={(password) => this.setState({ password })}
                     />
+                    {
+                        this.state.error ? 
+                        <Text style={styles.errStyle}>Wrong credentials. Please verify and try again</Text>
+                        : <Text></Text>
+                    }
+                    {
+                        this.state.firebaseErr ? 
+                        <Text style={styles.errStyle}>There was an error creating your account. Please check your internet connection and try again.</Text>
+                        : <Text></Text>
+                    }
                     <Button text="Create Account"
-                        onPress={() => console.warn('test works!')}>
+                        onPress={() => this.signup()}>
                     </Button>
                     <TouchableOpacity onPress={() => Actions.login()}>
                         <Text style={styles.textStyle}>Already have an account? Login</Text>
                     </TouchableOpacity>
+                    <View style={styles.footerContainer}>
+                        <Image
+                            style={styles.footerImageStyle}
+                            source={require('./../assets/caricature.png')}
+                        />
+                    </View>
                 </View>
-                <View style={styles.footerContainer}>
-                    <Image
-                        style={styles.footerImageStyle}
-                        source={require('./../assets/caricature.png')}
-                    />
-                </View>
+                </ScrollView>
+                <Spinner visible={this.state.visible} textContent={"Loading..."} textStyle={{color: '#FFF'}} />
             </View>
         );
     }
@@ -107,31 +185,27 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#555555',
     },
-    imageContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin: 20
-    },
-    iconStyleContainer: {
-        flex: 1
-    },
     SignupContainer: {
-        flex: 3,
+        flex: 4,
         justifyContent: 'center',
         marginLeft: 25,
         marginRight: 25
     },
-    footerContainer: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        height: 40
+    footerImageStyle: {
+        marginTop: 15,
+        marginBottom: 30
     },
     backButtonStyle: {
         width: 18,
         height: 18,
         marginLeft: 20,
         marginTop: 20
+    },
+    errStyle: {
+        fontWeight: '700',
+        color: '#F6921E', 
+        fontSize: 12,
+        textAlign: 'center'
     },
     imageStyle: {
         alignItems: 'center',

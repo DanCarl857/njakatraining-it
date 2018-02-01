@@ -43,7 +43,7 @@ class HomeScreen extends Component {
             } else {
                 this.setState({ loggedIn: true });
             }
-        })
+        });
     }
 
     navigateToDetails() {
@@ -80,7 +80,7 @@ class HomeScreen extends Component {
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
-                                        source={require('./../assets/algo_pic.jpeg')}
+                                        source={require('./../assets/work.jpg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
                                         <Text numberOfLines={1} style={styles.lessonTextStyle}>Intro to Algorithms</Text>
@@ -95,7 +95,7 @@ class HomeScreen extends Component {
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
-                                        source={require('./../assets/algo_pic.jpeg')}
+                                        source={require('./../assets/work.jpg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
                                         <Text numberOfLines={1} style={styles.lessonTextStyle}>Basic Algorithms</Text>
@@ -113,7 +113,7 @@ class HomeScreen extends Component {
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
-                                        source={require('./../assets/algo_pic.jpeg')}
+                                        source={require('./../assets/work.jpg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
                                         <Text numberOfLines={1} style={styles.lessonTextStyle}>Game Algorithms</Text>
@@ -128,7 +128,7 @@ class HomeScreen extends Component {
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
-                                        source={require('./../assets/algo_pic.jpeg')}
+                                        source={require('./../assets/work.jpg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
                                         <Text numberOfLines={1} style={styles.lessonTextStyle}>Graph Algorithms</Text>
