@@ -23,6 +23,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 // create a component
 class ParentSignupScreen extends Component {
 
+    // the worst error checking I ever did...
     state = {
         name: '',
         username: '',
@@ -30,7 +31,10 @@ class ParentSignupScreen extends Component {
         password: '',
         error: false,
         firebaseErr: false,
-        visible: false
+        visible: false,
+        passwordLenErr: false,
+        phoneErr: false,
+        emailErr: false
     }
 
     componentWillMount() {
@@ -54,11 +58,31 @@ class ParentSignupScreen extends Component {
     }
 
     signup() {
-        this.setState({ visible: !this.state.visible });
+        this.setState({ visible: true });
         const { email, password, username, phone, name } = this.state;
 
         if(name == '' || email == '' || password == '' || username == '' || phone == '') {
-            this.setState({ error: true });
+            this.setState({ error: true, visible: false });
+            return;
+        }
+
+        if(password.length < 6) {
+            this.setState({ passwordLenErr: true, visible: false });
+            return;
+        }
+
+        if(username.length < 4 && username.length > 10) {
+            this.setState({ usernameErr: true, visible: false });
+            return;
+        }
+
+        if(phone.length != 9 || phone.charAt(0) != '6') {
+            this.setState({ phoneErr: true, visible: false });
+            return;
+        }
+
+        if(email.search('@') == -1) {
+            this.setState({ emailErr: true, visible: false });
             return;
         }
 
@@ -85,7 +109,7 @@ class ParentSignupScreen extends Component {
             this.setState({ visible: false });
             // Handle errors here...
             this.setState({ firebaseErr: true, name: '', email: '', password: '', username: '', phone: '' });
-        })
+        });
     }
 
     render() {
@@ -102,7 +126,7 @@ class ParentSignupScreen extends Component {
                         returnKeyType='next'
                         label='Name'
                         value={this.state.name}
-                        onChangeText={(name) => this.setState({ name })}
+                        onChangeText={(name) => this.setState({ name,  })}
                     />
                     <TextField
                         textColor='#fff'
@@ -151,7 +175,7 @@ class ParentSignupScreen extends Component {
                     />
                     {
                         this.state.error ? 
-                        <Text style={styles.errStyle}>Wrong credentials. Please verify and try again</Text>
+                        <Text style={styles.errStyle}>Please make sure all the fields are properly filled...</Text>
                         : <Text></Text>
                     }
                     {
@@ -159,7 +183,22 @@ class ParentSignupScreen extends Component {
                         <Text style={styles.errStyle}>There was an error creating your account. Please check your internet connection and try again.</Text>
                         : <Text></Text>
                     }
-                    <Button text="Create Account"
+                    {
+                        this.state.passwordLenErr ? 
+                        <Text style={styles.errStyle}>Password should be atlease 6 characters long</Text>
+                        : <Text></Text>
+                    }
+                    {
+                        this.state.phoneErr ? 
+                        <Text style={styles.errStyle}>Please verify your phone number</Text>
+                        : <Text></Text>
+                    }
+                    {
+                        this.state.emailErr ? 
+                        <Text style={styles.errStyle}>Invalid Email</Text>
+                        : <Text></Text>
+                    }
+                    <Button text="Register"
                         onPress={() => this.signup()}>
                     </Button>
                     <TouchableOpacity onPress={() => Actions.login()}>

@@ -27,7 +27,8 @@ class LoginScreen extends Component {
         password: '',
         error: false, 
         loggedIn: false,
-        visible: false
+        visible: false,
+        emailErr: false
     };
 
     componentWillMount() {
@@ -37,6 +38,11 @@ class LoginScreen extends Component {
     login() {
         this.setState({ visible: !this.state.visible });
         const { email, password } = this.state;
+
+        if(email.search('@') == -1) {
+            this.setState({ emailErr: true, visible: false });
+            return;
+        }
 
         firebase.auth().signInWithEmailAndPassword(email, password).then(data => {
             this.setState({ visible: false });
@@ -82,8 +88,8 @@ class LoginScreen extends Component {
                         enablesReturnKeyAutomatically={true}
                         returnKeyType='next'
                         label='Email'
-                        value={this.state.username}
-                        onChangeText={(email) => this.setState({ email, error: false })}
+                        value={this.state.email}
+                        onChangeText={(email) => this.setState({ email, error: false, emailErr: false })}
                     />
                     <TextField
                         textColor='#fff'
@@ -95,11 +101,16 @@ class LoginScreen extends Component {
                         returnKeyType='next'
                         label='Password'
                         value={this.state.password}
-                        onChangeText={(password) => this.setState({ password })}
+                        onChangeText={(password) => this.setState({ password, error: false, emailErr: false })}
                     />
                     {
                         this.state.error ? 
                         <Text style={styles.errStyle}>Wrong credentials. Please verify and try again</Text>
+                        : <Text></Text>
+                    }
+                    {
+                        this.state.emailErr ? 
+                        <Text style={styles.errStyle}>Invalid Email.</Text>
                         : <Text></Text>
                     }
                     <Button text="Login"
@@ -142,7 +153,6 @@ const styles = StyleSheet.create({
         marginRight: 25
     },
     footerContainer: {
-        flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center'
     },

@@ -4,6 +4,7 @@ import {
     Text,
     StyleSheet,
     BackHandler,
+    Alert,
     Image,
     TextInput,
     AsyncStorage,
@@ -47,11 +48,23 @@ class HomeScreen extends Component {
     }
 
     navigateToDetails() {
-        // if(this.state.loggedIn) {
-        //     Actions.lesson();
-        // } else {
-        //     Actions.login();
-        // }
+
+        // AsyncStorage.getItem('njakaParentData').then(value => {
+        //     if(JSON.parse(value) != null) {
+        //         var data = JSON.parse(value);
+        //         if(data.loggedIn == true) {
+        //             Alert.alert(
+        //                 'Njaka App - Alpha version 1.0.0',
+        //                 'This is an alpha version of the app. We are demoing the User management feature',
+        //                 [
+        //                   {text: 'OK', onPress: () => Actions.home()},
+        //                 ]
+        //               );
+        //         } else {
+        //             Actions.login();
+        //         }
+        //     }
+        // });
         Actions.login();
     }
 
@@ -64,7 +77,7 @@ class HomeScreen extends Component {
                         source={require('./../assets/search.png')}
                     />
                     <TextInput
-                        style={{flex: 1}}
+                        style={{flex: 1, padding: 5, fontSize: 12 }}
                         placeholder="Search for Lessons..."
                         autoCapitalize='none'
                         autoCorrect={false}
@@ -80,7 +93,7 @@ class HomeScreen extends Component {
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
-                                        source={require('./../assets/work.jpg')}
+                                        source={require('./../assets/algo.jpg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
                                         <Text numberOfLines={1} style={styles.lessonTextStyle}>Intro to Algorithms</Text>
@@ -95,7 +108,7 @@ class HomeScreen extends Component {
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
-                                        source={require('./../assets/work.jpg')}
+                                        source={require('./../assets/algo.jpg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
                                         <Text numberOfLines={1} style={styles.lessonTextStyle}>Basic Algorithms</Text>
@@ -113,7 +126,7 @@ class HomeScreen extends Component {
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
-                                        source={require('./../assets/work.jpg')}
+                                        source={require('./../assets/algo.jpg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
                                         <Text numberOfLines={1} style={styles.lessonTextStyle}>Game Algorithms</Text>
@@ -128,7 +141,7 @@ class HomeScreen extends Component {
                                 <View>
                                     <Image
                                         style={styles.imageStyle}
-                                        source={require('./../assets/work.jpg')}
+                                        source={require('./../assets/algo.jpg')}
                                     />
                                     <View style={styles.lessonHeaderContainer}>
                                         <Text numberOfLines={1} style={styles.lessonTextStyle}>Graph Algorithms</Text>

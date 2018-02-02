@@ -16,6 +16,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import LessonDetailScreen from './src/screens/LessonDetailScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import LoginScreen from './src/screens/LoginScreen';
+import SplashScreen from './src/screens/SplashScreen';
 import ParentSignupScreen from './src/screens/ParentSignupScreen';
 
 // Lol this is so wrong...
@@ -47,7 +48,12 @@ export default class App extends Component{
             key="onboarding"
             component={OnboardingScreen}
             hideNavBar={true}
-            
+          />
+          <Scene
+            key="splash"
+            component={SplashScreen}
+            hideNavBar={true}
+            initial
           />
           <Scene
             key="home"
@@ -68,18 +74,17 @@ export default class App extends Component{
             key="login"
             component={LoginScreen}
             hideNavBar={true}
-            initial
           />
           <Scene
             key="settings"
             component={SettingsScreen}
             title="Settings"
-            onRight={() => Actions.settings()}
+            onRight={() => console.log('wow')}
             rightButtonImage={require('./src/assets/settings.png')}
           />
           <Scene
             key="parent_signup"
-            title="Create Account"
+            title="Parent Registration"
             onLeft={() => Actions.login()}
             leftButtonImage={require('./src/assets/back_arrow.png')}
             component={ParentSignupScreen}
